@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', monospace; background: #eef; text-align: center; padding: 10px; }
+        canvas { background: #fff; border: 2px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .spec { text-align: left; display: inline-block; background: #fff; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h3>ВУЗОЛ №2: РОЗРІЗ СТІНИ ЛСТК (Top View)</h3>
+    <canvas id="wallDetail" width="600" height="350"></canvas>
+    <div class="spec">
+        <b>🔘 Профіль ЛСТК:</b> П-подібний сталевий термопрофіль (150мм).<br>
+        <b>🟡 Утеплювач:</b> Базальтова плита (щільність 45 кг/м³).<br>
+        <b>🔴 Гофра:</b> Електропроводка (лінії №1-8) всередині стіни.<br>
+        <b>🟦 Пароізоляція:</b> Герметичний контур з боку приміщення.
+    </div>
+
+    <script>
+        const canvas = document.getElementById("wallDetail");
+        const ctx = canvas.getContext("2d");
+
+        // 1. Внутрішня обшивка (ГКЛ)
+        ctx.fillStyle = "#ddd";
+        ctx.fillRect(50, 250, 500, 12);
+        ctx.fillText("ВНУТРІШНЯ ОБШИВКА", 220, 280);
+
+        // 2. Пароізоляція (Синя лінія)
+        ctx.strokeStyle = "blue"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(50, 248); ctx.lineTo(550, 248); ctx.stroke();
+
+        // 3. ТЕРМОПРОФІЛЬ ЛСТК (Метал)
+        ctx.strokeStyle = "#555"; ctx.lineWidth = 4;
+        // Малюємо С-подібний профіль
+        ctx.beginPath();
+        ctx.moveTo(100, 245); ctx.lineTo(100, 100); ctx.lineTo(120, 100); // Ліва стійка
+        ctx.moveTo(400, 245); ctx.lineTo(400, 100); ctx.lineTo(380, 100); // Права стійка
+        ctx.stroke();
+
+        // 4. УТЕПЛЮВАЧ (Базальтова вата)
+        ctx.fillStyle = "#fff176";
+        ctx.fillRect(102, 102, 296, 143);
+        ctx.fillStyle = "#999"; ctx.font = "10px Arial";
+        ctx.fillText("БАЗАЛЬТОВА ВАТА 150мм", 180, 180);
+
+        // 5. ЕЛЕКТРОПРОВОДКА (Гофра в розрізі)
+        ctx.fillStyle = "red";
+        ctx.beginPath(); ctx.arc(150, 200, 8, 0, Math.PI*2); ctx.fill(); // Лінія розеток
+        ctx.beginPath(); ctx.arc(180, 200, 8, 0, Math.PI*2); ctx.fill(); // Лінія освітлення
+        ctx.fillStyle = "#fff"; ctx.fillText("⚡", 145, 204);
+
+        // 6. ВІТРОЗАХИСТ (Зовнішній контур)
+        ctx.strokeStyle = "cyan"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(50, 95); ctx.lineTo(550, 95); ctx.stroke();
+
+        // 7. ФАСАД (Зовнішня панель)
+        ctx.fillStyle = "#455a64";
+        ctx.fillRect(50, 60, 500, 15);
+        ctx.fillStyle = "#000";
+        ctx.fillText("ЗОВНІШНІЙ ФАСАД (Вентзазор 30мм)", 180, 50);
+
+        // Позначення "Містків холоду" (перфорація термопрофілю)
+        ctx.strokeStyle = "#ff0000"; ctx.lineWidth = 1;
+        for(let i=0; i<5; i++) {
+            ctx.beginPath(); ctx.moveTo(98, 120 + i*25); ctx.lineTo(102, 125 + i*25); ctx.stroke();
+        }
+    </script>
+</body>
+</html>

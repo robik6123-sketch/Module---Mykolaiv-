@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', Courier, monospace; background: #e0e0e0; text-align: center; }
+        canvas { background: #fff; border: 1px solid #999; box-shadow: 5px 5px 15px rgba(0,0,0,0.1); }
+        .tech-note { color: #d32f2f; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <h3>РОБОЧЕ КРЕСЛЕННЯ: ПЛАН ОСЕЙ ТА ПЕРЕГОРОДОК</h3>
+    <canvas id="dimensionPlan" width="620" height="420"></canvas>
+    <div class="tech-note">Усі розміри вказані в міліметрах (мм)</div>
+
+    <script>
+        const canvas = document.getElementById("dimensionPlan");
+        const ctx = canvas.getContext("2d");
+        const s = 0.08; 
+        const off = 60; // Збільшений відступ для розмірних ліній
+        
+        const wall = 100 * s; // Внутрішня перегородка (100мм)
+
+        // Малювання стін
+        ctx.lineWidth = 2; ctx.strokeStyle = "#000";
+        ctx.strokeRect(off, off, 6000*s, 3500*s); // Зовнішній контур
+
+        // Перегородки (Микола Степанович)
+        ctx.strokeRect(off + 1800*s, off, wall, 3500*s); // Ліва стіна вітальні
+        ctx.strokeRect(off + 4200*s, off, wall, 3500*s); // Права стіна вітальні
+        ctx.strokeRect(off + 1900*s, off + 1700*s, 1600*s, wall); // Стіна санвузла (горизонт)
+        ctx.strokeRect(off + 3400*s, off + 1700*s, wall, 1800*s); // Стіна санвузла (вертикаль)
+
+        // --- РОЗМІРНІ ЛІНІЇ (Винесення розмірів) ---
+        ctx.font = "10px Arial"; ctx.fillStyle = "#d32f2f";
+        ctx.lineWidth = 1; ctx.strokeStyle = "#d32f2f";
+
+        function drawDim(x1, y1, x2, y2, text, vertical = false) {
+            ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            // Засічки
+            if(vertical) {
+                ctx.moveTo(x1-5, y1); ctx.lineTo(x1+5, y1);
+                ctx.moveTo(x2-5, y2); ctx.lineTo(x2+5, y2);
+                ctx.save(); ctx.translate(x1-10, (y1+y2)/2); ctx.rotate(-Math.PI/2);
+                ctx.fillText(text, -15, 0); ctx.restore();
+            } else {
+                ctx.moveTo(x1, y1-5); ctx.lineTo(x1, y1+5);
+                ctx.moveTo(x2, y2-5); ctx.lineTo(x2, y2+5);
+                ctx.fillText(text, (x1+x2)/2 - 10, y1-10);
+            }
+            ctx.stroke();
+        }
+
+        // Горизонтальні розміри (Зверху)
+        drawDim(off, off-20, off + 1800*s, off-20, "1800");
+        drawDim(off + 1900*s, off-20, off + 4200*s, off-20, "2300");
+        drawDim(off + 4300*s, off-20, off + 6000*s, off-20, "1700");
+
+        // Розміри санвузла (Внутрішні)
+        drawDim(off + 1900*s, off + 1650*s, off + 3400*s, off + 1650*s, "1500");
+
+        // Вертикальні розміри (Зліва)
+        drawDim(off-30, off, off-30, off + 3500*s, "3500", true);
+        
+        // Вертикальні розміри санвузла
+        drawDim(off + 3600*s, off + 1700*s, off + 3600*s, off + 3500*s, "1800", true);
+
+        // Маркування зон
+        ctx.fillStyle = "#000"; ctx.font = "bold 12px Arial";
+        ctx.fillText("СПАЛЬНЯ 1", off + 40, off + 150);
+        ctx.fillText("ВІТАЛЬНЯ", off + 210, off + 80);
+        ctx.fillText("СПАЛЬНЯ 2", off + 360, off + 150);
+        ctx.fillText("С/В", off + 230, off + 250);
+
+    </script>
+</body>
+</html>

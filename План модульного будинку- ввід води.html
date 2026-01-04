@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2 style="font-family: Arial;">План модуля 6000х3500 мм (Масштаб 1:20)</h2>
+    <canvas id="planCanvas" width="700" height="450" style="border:1px solid #000; background: #f9f9f9;"></canvas>
+
+    <script>
+        const canvas = document.getElementById("planCanvas");
+        const ctx = canvas.getContext("2d");
+        const scale = 0.1; // Масштаб для відображення на екрані
+        const offset = 50;
+
+        // Дані від нашої групи
+        const w = 6000 * scale; 
+        const d = 3500 * scale;
+        const wall = 150 * scale;
+
+        // 1. Зовнішні стіни (Конструктив Олександровича)
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(offset, offset, w, d);
+
+        // 2. Внутрішній контур
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(offset + wall, offset + wall, w - (wall*2), d - (wall*2));
+
+        // 3. Перегородка санвузла (Микола Степанович)
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.moveTo(offset + (2500 * scale), offset);
+        ctx.lineTo(offset + (2500 * scale), offset + d);
+        ctx.stroke();
+
+        // 4. Точка вводу води (Сергій Іванович)
+        ctx.fillStyle = "blue";
+        ctx.beginPath();
+        ctx.arc(offset + (2600 * scale), offset + (300 * scale), 5, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillText("Ввід води (Ø50)", offset + (2650 * scale), offset + (320 * scale));
+
+        // Підписи
+        ctx.fillStyle = "black";
+        ctx.fillText("6000 mm", offset + (w/2) - 20, offset - 10);
+        ctx.fillText("3500 mm", offset - 45, offset + (d/2));
+    </script>
+</body>
+</html>

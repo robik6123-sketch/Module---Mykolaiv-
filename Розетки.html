@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', monospace; background: #eef; text-align: center; padding: 10px; }
+        canvas { background: #fff; border: 2px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.2); max-width: 100%; height: auto; }
+        .legend { display: inline-block; text-align: left; background: #fff; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 11px; }
+        .el-icon { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h3>ПЛАН "МОДУЛЬ-МИКОЛАЇВ" v2.11 (ЕЛЕКТРОМЕРЕЖІ)</h3>
+    <canvas id="electricPlan" width="650" height="500"></canvas>
+    <div class="legend">
+        <span style="color:red">●</span> <b>Розетки:</b> Кухня, Спальні, С/В.<br>
+        <span style="color:orange">■</span> <b>Ел. Щит:</b> Біля входу (праворуч).<br>
+        <span style="color:blue">--</span> <b>ВК:</b> Водопровід та каналізація збережені.<br>
+        💡 <b>Інклюзія:</b> Вимикачі на висоті 900мм.
+    </div>
+
+    <script>
+        const canvas = document.getElementById("electricPlan");
+        const ctx = canvas.getContext("2d");
+        const s = 0.08; const offX = 110; const offY = 100;
+        const L = 6000 * s; const W = 3500 * s;
+
+        // 1. БАЗОВА АРХІТЕКТУРА (v2.8)
+        ctx.lineWidth = 3; ctx.strokeStyle = "#000"; ctx.strokeRect(offX, offY, L, W);
+        ctx.lineWidth = 2;
+        ctx.beginPath(); // Перегородки
+        ctx.moveTo(offX + 1800*s, offY); ctx.lineTo(offX + 1800*s, offY + W);
+        ctx.moveTo(offX + 4200*s, offY); ctx.lineTo(offX + 4200*s, offY + W);
+        ctx.stroke();
+        // С/В
+        ctx.beginPath();
+        ctx.moveTo(offX + 1800*s, offY + 1700*s); ctx.lineTo(offX + 2800*s, offY + 1700*s); 
+        ctx.lineTo(offX + 3400*s, offY + 2300*s); ctx.lineTo(offX + 3400*s, offY + W);       
+        ctx.stroke();
+
+        // 2. ЕЛЕКТРИКА (Анатолій Григорович)
+        function drawSocket(x, y) {
+            ctx.fillStyle = "red";
+            ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI*2); ctx.fill();
+        }
+
+        // Електричний щит
+        ctx.fillStyle = "orange";
+        ctx.fillRect(offX + 4100*s, offY + W - 10, 25, 10);
+        ctx.fillStyle = "#000"; ctx.font = "bold 9px Arial";
+        ctx.fillText("ЩИТ", offX + 4100*s, offY + W + 15);
+
+        // Розетки.
+        drawSocket(offX + 2000*s, offY + 10); // Кухня 1
+        drawSocket(offX + 2500*s, offY + 10); // Кухня 2
+        drawSocket(offX + 3000*s, offY + 10); // Кухня 3
+        drawSocket(offX + 200*s, offY + 500*s);   // Спальня 1
+        drawSocket(offX + 5800*s, offY + 500*s);  // Спальня 2
+        drawSocket(offX + 1900*s, offY + 2000*s); // Санвузол (Бойлер)
+
+        // 3. МЕРЕЖІ ВК (Сергій Іванович - напівпрозорі для фону)
+        ctx.setLineDash([5, 5]); ctx.strokeStyle = "rgba(0,0,255,0.3)";
+        ctx.beginPath(); ctx.moveTo(offX, offY + 2500*s); ctx.lineTo(offX + 1900*s, offY + 2500*s); ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Вікна та Двері
+        ctx.lineWidth = 5; ctx.strokeStyle = "#ffd700";
+        ctx.beginPath(); ctx.moveTo(offX + 2200*s, offY); ctx.lineTo(offX + 3800*s, offY); ctx.stroke();
+        ctx.lineWidth = 4; ctx.strokeStyle = "#8b4513";
+        ctx.beginPath(); ctx.moveTo(offX + 3500*s, offY + W); ctx.lineTo(offX + 4100*s, offY + W); ctx.stroke();
+
+        // Написи
+        ctx.fillStyle = "#000"; ctx.font = "bold 10px Arial";
+        ctx.fillText("СПАЛЬНЯ 1", offX + 30, offY + 150);
+        ctx.fillText("КУХНЯ/ВІТАЛЬНЯ", offX + 210, offY + 80);
+        ctx.fillText("СПАЛЬНЯ 2", offX + 450, offY + 150);
+    </script>
+</body>
+</html>

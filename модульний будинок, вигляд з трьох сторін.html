@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: sans-serif; background: #222; color: #eee; text-align: center; }
+        canvas { background: #fff; border: 2px solid #555; margin: 10px; }
+        .label { color: #55ff55; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Проекції "Модуль-Миколаїв" (X, Y, Z)</h1>
+    
+    <div>
+        <p class="label">ПЛАН (Вісь X-Y) - Вигляд зверху</p>
+        <canvas id="planXY" width="400" height="250"></canvas>
+    </div>
+
+    <div>
+        <p class="label">ФАСАД/РОЗРІЗ (Вісь X-Z) - Довжина/Висота</p>
+        <canvas id="facadeXZ" width="400" height="200"></canvas>
+    </div>
+
+    <div>
+        <p class="label">ПРОФІЛЬ (Вісь Y-Z) - Ширина/Висота</p>
+        <canvas id="profileYZ" width="250" height="200"></canvas>
+    </div>
+
+    <script>
+        const scale = 0.05; // Масштаб для телефону
+        const L = 6000 * scale; // Довжина X
+        const W = 3500 * scale; // Ширина Y
+        const H = 2800 * scale; // Висота Z
+        const wall = 150 * scale;
+
+        function drawGrid(ctx, w, h) {
+            ctx.strokeStyle = "#ddd";
+            ctx.lineWidth = 0.5;
+            for(let i=0; i<w; i+=20) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,h); ctx.stroke(); }
+            for(let i=0; i<h; i+=20) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(w,i); ctx.stroke(); }
+        }
+
+        // --- 1. ПЛАН XY ---
+        const ctx1 = document.getElementById("planXY").getContext("2d");
+        drawGrid(ctx1, 400, 250);
+        ctx1.strokeStyle = "#000"; ctx1.lineWidth = 3;
+        ctx1.strokeRect(50, 50, L, W); // Зовнішній контур
+        ctx1.lineWidth = 1;
+        ctx1.strokeRect(50+wall, 50+wall, L-(wall*2), W-(wall*2)); // Внутрішній
+        ctx1.fillText("X: 6000", 50 + L/2, 40);
+        ctx1.fillText("Y: 3500", 10, 50 + W/2);
+
+        // --- 2. ФАСАД XZ ---
+        const ctx2 = document.getElementById("facadeXZ").getContext("2d");
+        drawGrid(ctx2, 400, 200);
+        ctx2.strokeStyle = "#b22222"; ctx2.lineWidth = 3;
+        ctx2.strokeRect(50, 50, L, H); // Контур стін
+        ctx2.fillStyle = "#888";
+        ctx2.fillRect(50, 50+H, L, 10); // Фундаментна рама
+        ctx2.fillText("Довжина X: 6000", 50 + L/2, 40);
+        ctx2.fillText("Висота Z: 2800", 10, 50 + H/2);
+
+        // --- 3. ПРОФІЛЬ YZ ---
+        const ctx3 = document.getElementById("profileYZ").getContext("2d");
+        drawGrid(ctx3, 250, 200);
+        ctx3.strokeStyle = "#2e8b57"; ctx3.lineWidth = 3;
+        ctx3.strokeRect(50, 50, W, H);
+        ctx3.fillText("Ширина Y: 3500", 50 + W/2, 40);
+        ctx3.fillText("Висота Z: 2800", 10, 50 + H/2);
+    </script>
+</body>
+</html>

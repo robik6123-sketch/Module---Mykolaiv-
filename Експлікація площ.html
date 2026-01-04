@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; background: #f0f0f0; text-align: center; }
+        canvas { background: #fff; border: 1px solid #333; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .data-table { margin: 20px auto; border-collapse: collapse; background: #fff; width: 90%; }
+        .data-table th, .data-table td { border: 1px solid #ccc; padding: 8px; font-size: 14px; }
+        .data-table th { background: #eee; }
+    </style>
+</head>
+<body>
+    <h3>Технічний план з експлікацією площ</h3>
+    <canvas id="planWithAreas" width="600" height="380"></canvas>
+
+    <table class="data-table">
+        <tr><th>№</th><th>Приміщення</th><th>Розміри (мм)</th><th>Площа</th></tr>
+        <tr><td>1</td><td>Спальня 1</td><td>1800 х 3500</td><td>6.30 м²</td></tr>
+        <tr><td>2</td><td>Вітальня-студія</td><td>2400 х 3500</td><td>8.40 м²</td></tr>
+        <tr><td>3</td><td>Спальня 2</td><td>1800 х 3500</td><td>6.30 м²</td></tr>
+        <tr><td>4</td><td>Санвузол (в межах вітальні)</td><td>1600 х 1800</td><td>(2.88 м²)</td></tr>
+        <tr><th colspan="3">Загальна площа модуля (зовнішня)</th><th>21.00 м²</th></tr>
+    </table>
+
+    <script>
+        const canvas = document.getElementById("planWithAreas");
+        const ctx = canvas.getContext("2d");
+        const s = 0.08; 
+        const off = 40;
+        
+        // Математика площ (внутрішні чисті розміри)
+        const area1 = (1800 * 3500) / 1000000;
+        const area2 = (2400 * 3500) / 1000000;
+        const area3 = (1800 * 3500) / 1000000;
+
+        // Малювання контурів
+        ctx.lineWidth = 2; ctx.strokeStyle = "#333";
+        ctx.strokeRect(off, off, 6000*s, 3500*s); // Весь модуль
+
+        // Перегородки
+        ctx.beginPath();
+        ctx.moveTo(off + 1800*s, off); ctx.lineTo(off + 1800*s, off + 3500*s);
+        ctx.moveTo(off + 4200*s, off); ctx.lineTo(off + 4200*s, off + 3500*s);
+        ctx.stroke();
+
+        // Санвузол
+        ctx.setLineDash([2, 2]);
+        ctx.strokeRect(off + 1800*s, off + 1700*s, 1600*s, 1800*s);
+        ctx.setLineDash([]);
+
+        // Маркування та Квадратура
+        ctx.font = "bold 11px Arial"; ctx.fillStyle = "#d32f2f";
+        
+        // Спальня 1
+        ctx.fillText("1. СПАЛЬНЯ", off + 20, off + 130);
+        ctx.fillText(area1.toFixed(2) + " m²", off + 50, off + 150);
+        
+        // Вітальня
+        ctx.fillStyle = "#1976d2";
+        ctx.fillText("2. ВІТАЛЬНЯ", off + 210, off + 80);
+        ctx.fillText(area2.toFixed(2) + " m²", off + 240, off + 100);
+
+        // Спальня 2
+        ctx.fillStyle = "#388e3c";
+        ctx.fillText("3. СПАЛЬНЯ", off + 360, off + 130);
+        ctx.fillText(area3.toFixed(2) + " m²", off + 390, off + 150);
+
+        // Розмірні лінії (зовнішні)
+        ctx.font = "10px Arial"; ctx.fillStyle = "#555";
+        ctx.fillText("← 6000 мм →", off + 200, off - 10);
+        ctx.fillText("3500", off - 30, off + 150);
+    </script>
+</body>
+</html>

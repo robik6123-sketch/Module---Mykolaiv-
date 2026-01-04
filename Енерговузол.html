@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', monospace; background: #eef; text-align: center; padding: 10px; }
+        canvas { background: #fff; border: 2px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.2); max-width: 100%; height: auto; }
+        .legend { display: inline-block; text-align: left; background: #fff; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h3>ПЛАН "МОДУЛЬ-МИКОЛАЇВ" v2.16 (ЕНЕРГОВУЗОЛ ПРИ ПАНЕЛЯХ)</h3>
+    <canvas id="energyCorePlan" width="750" height="550"></canvas>
+    
+    <div class="legend">
+        🔵 <b>БАК:</b> Тільки вода, примикає до санвузла.<br>
+        🟢 <b>ЕНЕРГОБЛОК (INV/АКБ):</b> Розміщений під навісом сонячних панелей.<br>
+        ⚡ <b>AC ЛІНІЯ:</b> Кабель 220V від інвертора до головного щитка модуля.<br>
+        ☀️ <b>SOLAR:</b> Масив панелей на 30 кВт (навіс для авто).
+    </div>
+
+    <script>
+        const canvas = document.getElementById("energyCorePlan");
+        const ctx = canvas.getContext("2d");
+        const s = 0.08; const offX = 180; const offY = 120;
+        const L = 6000 * s; const W = 3500 * s;
+
+        // 1. АРХІТЕКТУРА МОДУЛЯ (v2.8)
+        ctx.lineWidth = 3; ctx.strokeStyle = "#000";
+        ctx.strokeRect(offX, offY, L, W);
+        
+        // Внутрішні стіни та двері
+        ctx.lineWidth = 2; ctx.beginPath();
+        ctx.moveTo(offX + 1800*s, offY); ctx.lineTo(offX + 1800*s, offY + W);
+        ctx.moveTo(offX + 4200*s, offY); ctx.lineTo(offX + 4200*s, offY + W);
+        ctx.stroke();
+
+        // 2. ТЕРМО-БОКС ВОДИ (Тільки вода)
+        ctx.strokeStyle = "blue";
+        ctx.strokeRect(offX - 1000*s, offY + 1700*s, 1000*s, 1800*s);
+        ctx.fillStyle = "blue"; ctx.font = "bold 10px Arial";
+        ctx.fillText("БАК ВОДИ", offX - 75, offY + 280);
+
+        // 3. СОНЯЧНЕ ПОЛЕ ТА ЕНЕРГОБЛОК (INV/АКБ)
+        const solarX = offX + L + 60;
+        ctx.strokeStyle = "#007acc"; ctx.lineWidth = 1;
+        // Панелі
+        for(let i=0; i<6; i++) {
+            ctx.strokeRect(solarX, offY + (i*45), 120, 35);
+            ctx.fillStyle = "rgba(0,122,204,0.1)"; ctx.fillRect(solarX, offY + (i*45), 120, 35);
+        }
+        ctx.fillStyle = "#000"; ctx.fillText("СОНЯЧНИЙ НАВІС (30 кВт)", solarX, offY - 10);
+
+        // Блок Інвертора та Акумуляторів (зі сторони панелей)
+        ctx.fillStyle = "green";
+        ctx.fillRect(solarX - 40, offY + 50, 30, 80);
+        ctx.fillStyle = "#fff"; ctx.font = "bold 8px Arial";
+        ctx.save();
+        ctx.translate(solarX - 20, offY + 90);
+        ctx.rotate(-Math.PI/2);
+        ctx.fillText("INV + АКБ", 0, 0);
+        ctx.restore();
+
+        // 4. СИЛОВА ЛІНІЯ AC (Від енергоблоку до щитка модуля)
+        ctx.setLineDash([5, 5]); ctx.strokeStyle = "red"; ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(solarX - 25, offY + 90);
+        ctx.lineTo(offX + 4100*s, offY + W); // Вхід до щитка модуля
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = "red"; ctx.fillText("AC 220V", offX + L + 10, offY + W + 10);
+
+        // Підписи приміщень
+        ctx.fillStyle = "#000"; ctx.font = "bold 10px Arial";
+        ctx.fillText("СПАЛЬНЯ 1", offX + 20, offY + 150);
+        ctx.fillText("ВІТАЛЬНЯ", offX + 200, offY + 100);
+        ctx.fillText("СПАЛЬНЯ 2", offX + 350, offY + 150);
+    </script>
+</body>
+</html>

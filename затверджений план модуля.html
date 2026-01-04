@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', monospace; background: #eef; text-align: center; padding: 10px; }
+        canvas { background: #fff; border: 2px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.2); max-width: 100%; height: auto; }
+        .legend { display: inline-block; text-align: left; background: #fff; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 11px; }
+    </style>
+</head>
+<body>
+    <h3>ПЛАН "МОДУЛЬ-МИКОЛАЇВ" v2.8 (АРХІТЕКТУРА ЗАТВЕРДЖЕНА)</h3>
+    
+    <canvas id="finalPlanTraps" width="650" height="480"></canvas>
+
+    <div class="legend">
+        🚿 <b>Санвузол:</b> Безбар'єрне середовище, вмонтований трап у підлогу.<br>
+        🧱 <b>Стіни:</b> Перегородки спалень повністю стиковані з контуром.<br>
+        📏 <b>Кухня:</b> Глибина стільниці 600мм, відступ до дверей 750мм.
+    </div>
+
+    <script>
+        const canvas = document.getElementById("finalPlanTraps");
+        const ctx = canvas.getContext("2d");
+        const s = 0.08; 
+        const offX = 110; 
+        const offY = 80;
+
+        const L = 6000 * s; 
+        const W = 3500 * s;
+
+        // 1. ЗОВНІШНІ СТІНИ
+        ctx.lineWidth = 3; ctx.strokeStyle = "#000";
+        ctx.strokeRect(offX, offY, L, W);
+
+        // 2. ПОВНІ ПЕРЕГОРОДКИ СПАЛЕН (До самої гори!)
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        // Ліва перегородка
+        ctx.moveTo(offX + 1800*s, offY); ctx.lineTo(offX + 1800*s, offY + W);
+        // Права перегородка
+        ctx.moveTo(offX + 4200*s, offY); ctx.lineTo(offX + 4200*s, offY + W);
+        ctx.stroke();
+
+        // 3. САНВУЗОЛ ЗІ СКОСОМ
+        ctx.beginPath();
+        ctx.moveTo(offX + 1800*s, offY + 1700*s);
+        ctx.lineTo(offX + 2800*s, offY + 1700*s); 
+        ctx.lineTo(offX + 3400*s, offY + 2300*s); 
+        ctx.lineTo(offX + 3400*s, offY + W);       
+        ctx.stroke();
+
+        // 4. ТРАП У ПІДЛОЗІ (Схематично в С/В)
+        ctx.strokeStyle = "#aaa"; ctx.lineWidth = 1;
+        ctx.strokeRect(offX + 2000*s, offY + 3000*s, 200*s, 200*s);
+        ctx.beginPath();
+        ctx.moveTo(offX + 2000*s, offY + 3000*s); ctx.lineTo(offX + 2200*s, offY + 3200*s);
+        ctx.moveTo(offX + 2200*s, offY + 3000*s); ctx.lineTo(offX + 2000*s, offY + 3200*s);
+        ctx.stroke();
+
+        // 5. ВІКНА (Жовті)
+        ctx.lineWidth = 5; ctx.strokeStyle = "#ffd700";
+        ctx.beginPath(); ctx.moveTo(offX + 400*s, offY + W); ctx.lineTo(offX + 1400*s, offY + W); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(offX + 4600*s, offY + W); ctx.lineTo(offX + 5600*s, offY + W); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(offX + 2200*s, offY); ctx.lineTo(offX + 3800*s, offY); ctx.stroke();
+
+        // 6. ДВЕРІ (Коричневі)
+        ctx.lineWidth = 4; ctx.strokeStyle = "#8b4513";
+        ctx.beginPath(); ctx.moveTo(offX + 3500*s, offY + W); ctx.lineTo(offX + 4100*s, offY + W); ctx.stroke(); // Вхід
+        ctx.beginPath(); ctx.moveTo(offX + 1800*s, offY + 850*s); ctx.lineTo(offX + 1800*s, offY + 1600*s); ctx.stroke(); // Сп1
+        ctx.beginPath(); ctx.moveTo(offX + 4200*s, offY + 850*s); ctx.lineTo(offX + 4200*s, offY + 1600*s); ctx.stroke(); // Сп2
+        ctx.beginPath(); ctx.moveTo(offX + 2850*s, offY + 1750*s); ctx.lineTo(offX + 3350*s, offY + 2250*s); ctx.stroke(); // С/В
+
+        // 7. МАРКУВАННЯ РОЗМІРІВ
+        ctx.strokeStyle = "#d32f2f"; ctx.fillStyle = "#d32f2f"; ctx.font = "9px Arial";
+        function dimH(x, y, len, txt) {
+            ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + len*s, y); ctx.stroke();
+            ctx.fillText(txt, x + (len*s)/2 - 10, y - 5);
+        }
+        dimH(offX, offY - 15, 1800, "1800"); 
+        dimH(offX + 1800*s, offY - 15, 2400, "2400");
+        dimH(offX + 4200*s, offY - 15, 1800, "1800");
+
+        ctx.fillStyle = "#000"; ctx.font = "bold 10px Arial";
+        ctx.fillText("СПАЛЬНЯ 1", offX + 30, offY + 180);
+        ctx.fillText("ВІТАЛЬНЯ", offX + 220, offY + 140);
+        ctx.fillText("СПАЛЬНЯ 2", offX + 450, offY + 180);
+        ctx.fillText("ТРАП", offX + 190, offY + 340);
+    </script>
+</body>
+</html>

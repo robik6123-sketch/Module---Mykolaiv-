@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', monospace; background: #eef; text-align: center; padding: 10px; }
+        canvas { background: #fff; border: 2px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.2); max-width: 100%; height: auto; }
+        .legend { display: inline-block; text-align: left; background: #fff; padding: 15px; margin-top: 10px; border-radius: 8px; font-size: 11px; }
+        table { border-collapse: collapse; width: 300px; margin: 10px auto; font-size: 10px; background: #fff; }
+        th, td { border: 1px solid #ccc; padding: 4px; text-align: left; }
+    </style>
+</head>
+<body>
+    <h3>ПЛАН "МОДУЛЬ-МИКОЛАЇВ" v2.13 (РОЗПОДІЛ ЕЛЕКТРОЕНЕРГІЇ)</h3>
+    <canvas id="panelPlan" width="650" height="520"></canvas>
+
+    <table>
+        <tr><th>№</th><th>Споживач</th><th>Потужність (max)</th></tr>
+        <tr><td>1-2</td><td>Ввідний + ПЗВ</td><td>11.0 кВт</td></tr>
+        <tr><td>3</td><td>Бойлер/Санвузол</td><td>2.5 кВт</td></tr>
+        <tr><td>4</td><td>Кухня (Робоча)</td><td>3.5 кВт</td></tr>
+        <tr><td>5</td><td>Холод/Бак (Гріючий)</td><td>0.8 кВт</td></tr>
+        <tr><td>6</td><td>Тепловий насос</td><td>2.0 кВт</td></tr>
+        <tr><td>7</td><td>Розетки спалень</td><td>2.5 кВт</td></tr>
+        <tr><td>8</td><td>Освітлення LED</td><td>0.3 кВт</td></tr>
+    </table>
+
+    <script>
+        const canvas = document.getElementById("panelPlan");
+        const ctx = canvas.getContext("2d");
+        const s = 0.08; const offX = 110; const offY = 100;
+        const L = 6000 * s; const W = 3500 * s;
+
+        // 1. АРХІТЕКТУРА
+        ctx.lineWidth = 3; ctx.strokeStyle = "#000"; ctx.strokeRect(offX, offY, L, W);
+        ctx.lineWidth = 2;
+        ctx.beginPath(); // Сп1
+        ctx.moveTo(offX + 1800*s, offY); ctx.lineTo(offX + 1800*s, offY + W);
+        ctx.moveTo(offX + 4200*s, offY); ctx.lineTo(offX + 4200*s, offY + W);
+        ctx.stroke();
+
+        // 2. САНВУЗОЛ
+        ctx.beginPath();
+        ctx.moveTo(offX + 1800*s, offY + 1700*s); ctx.lineTo(offX + 2800*s, offY + 1700*s); 
+        ctx.lineTo(offX + 3400*s, offY + 2300*s); ctx.lineTo(offX + 3400*s, offY + W);       
+        ctx.stroke();
+
+        // 3. ЕЛЕКТРОЩИТОК (Деталізація автоматів)
+        ctx.fillStyle = "orange";
+        const shieldX = offX + 4100*s; const shieldY = offY + W - 15;
+        ctx.fillRect(shieldX, shieldY, 40, 15); // Корпус щитка
+        ctx.fillStyle = "#fff"; ctx.font = "bold 8px Arial";
+        ctx.fillText("1 2 3 4 5 6 7 8", shieldX + 2, shieldY + 10);
+        ctx.fillStyle = "#000"; ctx.fillText("ЩИТ (ЩО)", shieldX, shieldY + 25);
+
+        // 4. НАНЕСЕННЯ СПОЖИВАЧІВ (номери згідно специфікації)
+        ctx.font = "bold 9px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("(4)", offX + 2400*s, offY + 150*s); // Кухня
+        ctx.fillText("(5)", offX - 500*s, offY + 2500*s); // Бак/Холод
+        ctx.fillText("(3)", offX + 2200*s, offY + 2800*s); // Бойлер
+        ctx.fillText("(6)", offX + 4800*s, offY - 150*s); // ТН
+        ctx.fillText("(7)", offX + 400*s, offY + 3200*s); // Сп1
+        ctx.fillText("(7)", offX + 5400*s, offY + 3200*s); // Сп2
+        ctx.fillText("(8)", offX + 3000*s, offY + 1500*s); // Світло центр
+
+        // Зовнішні елементи
+        ctx.lineWidth = 5; ctx.strokeStyle = "#ffd700";
+        ctx.beginPath(); ctx.moveTo(offX + 2200*s, offY); ctx.lineTo(offX + 3800*s, offY); ctx.stroke();
+        ctx.lineWidth = 4; ctx.strokeStyle = "#8b4513";
+        ctx.beginPath(); ctx.moveTo(offX + 3500*s, offY + W); ctx.lineTo(offX + 4100*s, offY + W); ctx.stroke();
+    </script>
+</body>
+</html>
+'

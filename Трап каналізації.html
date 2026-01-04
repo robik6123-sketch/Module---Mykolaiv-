@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: 'Courier New', monospace; background: #eef; text-align: center; padding: 10px; }
+        canvas { background: #fff; border: 2px solid #333; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .tech-desc { text-align: left; display: inline-block; max-width: 600px; background: #fff; padding: 15px; margin-top: 10px; font-size: 12px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <h3>ВУЗОЛ №1: РОЗРІЗ ТРАПА ТА ПЕРЕКРИТТЯ (Scale 1:10)</h3>
+    <canvas id="detailNode" width="600" height="400"></canvas>
+    
+    <div class="tech-desc">
+        <b>1. Покриття:</b> Плитка + еластичний клей.<br>
+        <b>2. Гідроізоляція:</b> Двокомпонентна мастика ("корито").<br>
+        <b>3. Трап:</b> Корпус із сухим затвором.<br>
+        <b>4. Утеплювач:</b> Мінвата 200мм між балками ЛСТК.<br>
+        <b>5. Гільза:</b> Прохід крізь нижню підшивку з ущільнювачем.
+    </div>
+
+    <script>
+        const canvas = document.getElementById("detailNode");
+        const ctx = canvas.getContext("2d");
+
+        // Малюємо шари підлоги (зверху вниз)
+        // 1. Плитка (коричнева)
+        ctx.fillStyle = "#8b4513";
+        ctx.fillRect(50, 100, 500, 10);
+        
+        // 2. Гідроізоляція (синя лінія)
+        ctx.strokeStyle = "blue"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(50, 110); ctx.lineTo(550, 110); ctx.stroke();
+
+        // 3. Стяжка/Основа (сіра)
+        ctx.fillStyle = "#ccc";
+        ctx.fillRect(50, 113, 500, 40);
+
+        // 4. Балки ЛСТК (металевий колір)
+        ctx.fillStyle = "#777";
+        ctx.fillRect(80, 153, 40, 200); // Ліва балка
+        ctx.fillRect(480, 153, 40, 200); // Права балка
+
+        // 5. Утеплювач (жовтий зигзаг)
+        ctx.fillStyle = "#fff59d";
+        ctx.fillRect(120, 153, 360, 200);
+
+        // 6. КОРПУС ТРАПА
+        ctx.fillStyle = "#444";
+        ctx.fillRect(270, 90, 60, 80); // Верх трапа
+        
+        // 7. КАНАЛІЗАЦІЙНА ТРУБА (сіра)
+        ctx.fillStyle = "#999";
+        ctx.fillRect(285, 170, 30, 180); // Вертикальний стік
+        
+        // Вихід труби вбік (ухил)
+        ctx.beginPath();
+        ctx.moveTo(315, 330);
+        ctx.lineTo(550, 350);
+        ctx.lineTo(550, 380);
+        ctx.lineTo(285, 350);
+        ctx.fill();
+
+        // 8. Ущільнювальна манжета (EPDM)
+        ctx.strokeStyle = "black"; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.moveTo(270, 353); ctx.lineTo(330, 353); ctx.stroke();
+
+        // Підписи
+        ctx.fillStyle = "#000"; ctx.font = "bold 12px Arial";
+        ctx.fillText("ТРАП", 280, 85);
+        ctx.fillText("ПЛИТКА", 50, 95);
+        ctx.fillText("УТЕПЛЮВАЧ 200мм", 220, 250);
+        ctx.fillText("БАЛКА ЛСТК", 60, 370);
+        ctx.fillText("ВИХІД ДО СЕПТИКА (i=0.02)", 350, 390);
+    </script>
+</body>
+</html>
