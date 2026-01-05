@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+        <title>Модуль-Миколаїв: Головна</title>
+            <style>
+                    body { margin: 0; background: #111; overflow: hidden; }
+                            #info { position: absolute; top: 10px; left: 10px; color: #0f0; background: rgba(0,0,0,0.8); padding: 10px; font-family: monospace; border: 1px solid #0f0; }
+                                </style>
+                                </head>
+                                <body>
+                                    <div id="info">СИСТЕМА: МОДУЛЬ-МИКОЛАЇВ<br>Розділ АР: ПІДКЛЮЧЕНО</div>
+
+                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+                                            
+                                                <script type="module">
+                                                        import { createArchitecture } from './js/architecture.js';
+
+                                                                // Налаштування сцени
+                                                                        const scene = new THREE.Scene();
+                                                                                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                                                                                        const renderer = new THREE.WebGLRenderer({ antialias: true });
+                                                                                                renderer.setSize(window.innerWidth, window.innerHeight);
+                                                                                                        document.body.appendChild(renderer.domElement);
+
+                                                                                                                scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+                                                                                                                        camera.position.set(8, 5, 8);
+                                                                                                                                camera.lookAt(0, 1, 0);
+
+                                                                                                                                        // ВИКЛИК АРХІТЕКТУРИ
+                                                                                                                                                createArchitecture(scene);
+
+                                                                                                                                                        function animate() {
+                                                                                                                                                                    requestAnimationFrame(animate);
+                                                                                                                                                                                scene.rotation.y += 0.002; // Модель буде повільно обертатися
+                                                                                                                                                                                            renderer.render(scene, camera);
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                            animate();
+                                                                                                                                                                                                                </script>
+                                                                                                                                                                                                                </body>
+                                                                                                                                                                                                                </html>
+                                                                                                                                                                                                                
