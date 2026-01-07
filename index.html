@@ -2,43 +2,63 @@
 <html>
 <head>
     <meta charset="UTF-8">
-        <title>Модуль-Миколаїв: Головна</title>
+        <title>Модуль-Миколаїв: Налагодження</title>
             <style>
-                    body { margin: 0; background: #111; overflow: hidden; }
-                            #info { position: absolute; top: 10px; left: 10px; color: #0f0; background: rgba(0,0,0,0.8); padding: 10px; font-family: monospace; border: 1px solid #0f0; }
-                                </style>
-                                </head>
-                                <body>
-                                    <div id="info">СИСТЕМА: МОДУЛЬ-МИКОЛАЇВ<br>Розділ АР: ПІДКЛЮЧЕНО</div>
+                    body { margin: 0; background: #111; overflow: hidden; font-family: monospace; }
+                            #ui { position: absolute; top: 10px; left: 10px; color: #0f0; background: rgba(0,0,0,0.8); padding: 10px; border: 1px solid #0f0; pointer-events: none; }
+                                    #coords { position: absolute; top: 10px; right: 10px; color: #ff0; background: rgba(0,0,0,0.8); padding: 10px; border: 1px solid #ff0; font-size: 14px; }
+                                        </style>
+                                        </head>
+                                        <body>
+                                            <div id="ui">СИСТЕМА: МОДУЛЬ-МИКОЛАЇВ<br>Режим: Ручне коригування (Drag)</div>
+                                                <div id="coords">Координати об'єкта:<br>X: 0.00 | Y: 0.00 | Z: 0.00</div>
 
-                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-                                            
-                                                <script type="module">
-                                                        import { createArchitecture } from './js/architecture.js';
-                                                        import { createPlumbing } from './js/engineering.js';
-                                        
+                                                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+                                                        
+                                                            <script type="module">
+                                                                    import { createArchitecture } from './js/architecture.js';
+                                                                            import { createPlumbing } from './js/engineering.js';
+                                                                                    import { DragControls } from 'https://cdn.skypack.dev/three@0.128.0/examples/jsm/controls/DragControls.js';
 
-                                                                // Налаштування сцени
-                                                                        const scene = new THREE.Scene();
-                                                                                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                                                                                        const renderer = new THREE.WebGLRenderer({ antialias: true });
-                                                                                                renderer.setSize(window.innerWidth, window.innerHeight);
-                                                                                                        document.body.appendChild(renderer.domElement);
+                                                                                            const scene = new THREE.Scene();
+                                                                                                    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                                                                                                            const renderer = new THREE.WebGLRenderer({ antialias: true });
+                                                                                                                    renderer.setSize(window.innerWidth, window.innerHeight);
+                                                                                                                            document.body.appendChild(renderer.domElement);
 
-                                                                                                                scene.add(new THREE.AmbientLight(0xffffff, 0.8));
-                                                                                                                        camera.position.set(8, 5, 8);
-                                                                                                                                camera.lookAt(0, 1, 0);
+                                                                                                                                    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+                                                                                                                                            camera.position.set(8, 6, 8);
+                                                                                                                                                    camera.lookAt(0, 1, 0);
 
-                                                                                                                                        // ВИКЛИК АРХІТЕКТУРИ
-                                                                                                                                                createArchitecture(scene);
-                                                                                                                                                createPlumbing(scene);
-                                                                                                                                                        function animate() {
-                                                                                                                                                                    requestAnimationFrame(animate);
-                                                                                                                                                                                scene.rotation.y += 0.002; // Модель буде повільно обертатися
-                                                                                                                                                                                            renderer.render(scene, camera);
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                            animate();
-                                                                                                                                                                                                                </script>
-                                                                                                                                                                                                                </body>
-                                                                                                                                                                                                                </html>
+                                                                                                                                                            const draggableObjects = [];
+                                                                                                                                                                    createArchitecture(scene);
+                                                                                                                                                                            createPlumbing(scene);
+
+                                                                                                                                                                                    // Додаємо всі об'єкти (крім великої коробки будинку) до списку перетягування
+                                                                                                                                                                                            scene.traverse((child) => {
+                                                                                                                                                                                                        if (child instanceof THREE.Mesh && child.geometry.type !== 'BoxGeometry') {
+                                                                                                                                                                                                                        draggableObjects.push(child);
+                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                            });
+
+                                                                                                                                                                                                                                                    const controls = new DragControls(draggableObjects, camera, renderer.domElement);
+                                                                                                                                                                                                                                                            const coordsDisplay = document.getElementById('coords');
+
+                                                                                                                                                                                                                                                                    // Логіка оновлення координат на екрані
+                                                                                                                                                                                                                                                                            controls.addEventListener('drag', function (event) {
+                                                                                                                                                                                                                                                                                        const pos = event.object.position;
+                                                                                                                                                                                                                                                                                                    coordsDisplay.innerHTML = `Координати об'єкта:<br>X: ${pos.x.toFixed(2)} | Y: ${pos.y.toFixed(2)} | Z: ${pos.z.toFixed(2)}`;
+                                                                                                                                                                                                                                                                                                                renderer.render(scene, camera);
+                                                                                                                                                                                                                                                                                                                        });
+
+                                                                                                                                                                                                                                                                                                                                function animate() {
+                                                                                                                                                                                                                                                                                                                                            requestAnimationFrame(animate);
+                                                                                                                                                                                                                                                                                                                                                        renderer.render(scene, camera);
+                                                                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                                                                        animate();
+                                                                                                                                                                                                                                                                                                                                                                            </script>
+                                                                                                                                                                                                                                                                                                                                                                            </body>
+                                                                                                                                                                                                                                                                                                                                                                            </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
                                                                                                                                                                                                                 
