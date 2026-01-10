@@ -1,55 +1,48 @@
-    import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+      import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
 
-    export function createArchitecture(scene) {
-        const wallMat = new THREE.MeshPhongMaterial({ color: 0xdddddd, transparent: true, opacity: 0.6 });
-            const glassMat = new THREE.MeshPhongMaterial({ color: 0x88ccff, transparent: true, opacity: 0.4 });
-                const doorMat = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
+      export function createArchitecture(scene) {
+          const wallMat = new THREE.MeshPhongMaterial({ color: 0xdddddd, transparent: true, opacity: 0.6 });
+              const glassMat = new THREE.MeshPhongMaterial({ color: 0x88ccff, transparent: true, opacity: 0.4 });
+                  const doorMat = new THREE.MeshPhongMaterial({ color: 0x8b4513 });
 
-                    // Центр координат сцени - це центр вітальні. 
-                        // Весь модуль 6000мм (6 одиниць у Three.js)
+                      // 1. ПЕРЕГОРОДКИ СПАЛЕН (точно за розміром 1800мм)
+                          const wallL = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.6, 3.5), wallMat);
+                              wallL.position.set(-1.2, 1.3, 0); // Ліва межа вітальні
+                                  scene.add(wallL);
 
-                            // 1. ПЕРЕГОРОДКИ СПАЛЕН (повні, від стіни до стіни)
-                                const wallLeft = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.6, 3.5), wallMat);
-                                    wallLeft.position.set(-1.2, 1.3, 0); // Межа 1800мм від лівого краю
-                                        scene.add(wallLeft);
+                                      const wallR = new THREE.Mesh(new THREE.BoxGeometry(0.05, 2.6, 3.5), wallMat);
+                                          wallR.position.set(1.2, 1.3, 0); // Права межа вітальні
+                                              scene.add(wallR);
 
-                                            const wallRight = new THREE.Mesh(new THREE.BoxGeometry(0.1, 2.6, 3.5), wallMat);
-                                                wallRight.position.set(1.2, 1.3, 0); // Межа 1800мм від правого краю
-                                                    scene.add(wallRight);
+                                                  // 2. САНВУЗОЛ v2.8 (Складна форма)
+                                                      // Задня стінка С/В (від спальні до скосу)
+                                                          const bathBack = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.6, 0.05), wallMat);
+                                                              bathBack.position.set(-0.7, 1.3, -0.05); 
+                                                                  scene.add(bathBack);
 
-                                                        // 2. САНВУЗОЛ ЗІ СКОСОМ (Логіка вашого плану)
-                                                            // Стіна вздовж вітальні
-                                                                const bathLong = new THREE.Mesh(new THREE.BoxGeometry(1.0, 2.6, 0.1), wallMat);
-                                                                    bathLong.position.set(-0.7, 1.3, -0.05); 
-                                                                        scene.add(bathLong);
+                                                                      // Скошена стінка з дверима (кут 45 градусів за планом)
+                                                                          const bathSkew = new THREE.Mesh(new THREE.BoxGeometry(0.85, 2.6, 0.05), wallMat);
+                                                                              bathSkew.rotation.y = Math.PI / 4;
+                                                                                  bathSkew.position.set(0.1, 1.3, 0.25);
+                                                                                      scene.add(bathSkew);
 
-                                                                            // Скошена стіна (діагональ)
-                                                                                const bathSkew = new THREE.Mesh(new THREE.BoxGeometry(0.85, 2.6, 0.1), wallMat);
-                                                                                    bathSkew.rotation.y = Math.PI / 4;
-                                                                                        bathSkew.position.set(0.1, 1.3, 0.25);
-                                                                                            scene.add(bathSkew);
+                                                                                          // 3. ВХІДНІ ДВЕРІ (зміщені праворуч, 3500-4100 за кресленням)
+                                                                                              const mainDoor = new THREE.Mesh(new THREE.BoxGeometry(0.8, 2.1, 0.1), doorMat);
+                                                                                                  mainDoor.position.set(0.8, 1.05, 1.75);
+                                                                                                      scene.add(mainDoor);
 
-                                                                                                // 3. ВІКНА (Жовті лінії з плану)
-                                                                                                    const win1 = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.5, 0.1), glassMat);
-                                                                                                        win1.position.set(-2.4, 1.3, 1.75); scene.add(win1); // Спальня 1
+                                                                                                          // 4. ВІКНА (за кольоровими мітками плану)
+                                                                                                              // Вікна спалень (на фасаді)
+                                                                                                                  const winS1 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 0.1), glassMat);
+                                                                                                                      winS1.position.set(-2.1, 1.4, 1.75); scene.add(winS1);
 
-                                                                                                            const win2 = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.5, 0.1), glassMat);
-                                                                                                                win2.position.set(2.4, 1.3, 1.75); scene.add(win2); // Спальня 2
+                                                                                                                          const winS2 = new THREE.Mesh(new THREE.BoxGeometry(1.2, 1.2, 0.1), glassMat);
+                                                                                                                              winS2.position.set(2.1, 1.4, 1.75); scene.add(winS2);
 
-                                                                                                                    const winMain = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.2, 0.1), glassMat);
-                                                                                                                        winMain.position.set(0, 1.6, -1.75); scene.add(winMain); // Центральне вікно
+                                                                                                                                  // Центральне вікно (на тильній стороні)
+                                                                                                                                      const winMid = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.0, 0.1), glassMat);
+                                                                                                                                          winMid.position.set(0, 1.5, -1.75); scene.add(winMid);
 
-                                                                                                                            // 4. ДВЕРІ (Коричневі лінії)
-                                                                                                                                const doorMain = new THREE.Mesh(new THREE.BoxGeometry(0.9, 2.1, 0.1), doorMat);
-                                                                                                                                    doorMain.position.set(0.85, 1.05, 1.75); // Вхід поруч зі спальнею 2
-                                                                                                                                        scene.add(doorMain);
-
-                                                                                                                                            // 5. ЗОВНІШНІЙ КОНТУР (прозорий для огляду)
-                                                                                                                                                const frame = new THREE.Mesh(new THREE.BoxGeometry(6, 2.6, 3.5), 
-                                                                                                                                                        new THREE.MeshPhongMaterial({ color: 0x000000, wireframe: true, opacity: 0.1 }));
-                                                                                                                                                            frame.position.y = 1.3;
-                                                                                                                                                                scene.add(frame);
-
-                                                                                                                                                                    console.log("АР: Планування v2.8 (3 секції) реалізовано");
-                                                                                                                                                                    }                                                                                              
-                                                                                                                                                                                                                                                                  
+                                                                                                                                              console.log("АР: Геометрія v2.8 успішно інтегрована в 3D");
+                                                                                                                                              }                                                                               
+                                                                                                                                                                                                                             
